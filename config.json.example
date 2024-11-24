@@ -1,0 +1,5 @@
+{
+    "testServer": "", //test server of your bot (wich will be used for test commands)
+    "clientId": "", //id of your bot
+    "devs": [] // list of devs (wich will have access to dev commands)
+}
