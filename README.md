@@ -1,1 +1,1 @@
-# A silly discord bot doing silly things (hopefully plaing music)
+# A silly discord bot doing silly things (hopefully playing music)
