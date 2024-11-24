@@ -8,25 +8,25 @@ module.exports = async (client, interaction) => {
 
   try {
     const commandObject = localCommands.find(
-      (cmd) => cmd.name === interaction.commandName
+      (cmd) => cmd.data.name === interaction.commandName
     );
 
     if (!commandObject) return;
 
-    if (commandObject.devOnly) {
+    if (commandObject.data.devOnly) {
       if (!devs.includes(interaction.member.id)) {
         interaction.reply({
-          content: 'Nie masz uprawnien aby tego użyć. (DevOnly)',
+          content: 'Nie możesz tego użyć. (DevOnly)',
           ephemeral: true,
         });
         return;
       }
     }
 
-    if (commandObject.testOnly) {
+    if (commandObject.data.testOnly) {
       if (!(interaction.guild.id === testServer)) {
         interaction.reply({
-          content: 'Nie może tu tego wykonać. (DevOnly)',
+          content: 'Nie możesz użyć tego tutaj. (TestServerOnly)',
           ephemeral: true,
         });
         return;
@@ -37,7 +37,7 @@ module.exports = async (client, interaction) => {
       for (const permission of commandObject.permissionsRequired) {
         if (!interaction.member.permissions.has(permission)) {
           interaction.reply({
-            content: 'Niewystarczające uprawnienia.',
+            content: 'Nie posiadasz wystarczających uprawnień.',
             ephemeral: true,
           });
           return;
@@ -51,16 +51,20 @@ module.exports = async (client, interaction) => {
 
         if (!bot.permissions.has(permission)) {
           interaction.reply({
-            content: 'Nie mam wystarczających uprawnień.',
+            content: "Bot nie posiada wystarczających uprawnień.",
             ephemeral: true,
           });
           return;
         }
       }
     }
+    await commandObject.execute(interaction, client);
 
-    await commandObject.callback(client, interaction);
   } catch (error) {
-    console.log(`Wystąpił błąd podczas uruchamiania tej komendy: ${error}`);
+    console.error(error);
+    await interaction.reply({
+      content: 'There was an error while executing this command!',
+      ephemeral: true
+    })
   }
-};
+}
