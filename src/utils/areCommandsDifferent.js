@@ -1,7 +1,6 @@
 const deepDiff = require('deep-diff').diff; // Install deep-diff package
 
 module.exports = (existingCommand, localCommand) => {
-  // Function to debug and print differences
   const printDifferences = (existingData, localData) => {
     const differences = deepDiff(existingData, localData);
     if (differences) {
@@ -17,17 +16,12 @@ module.exports = (existingCommand, localCommand) => {
     }
   };
 
-  // Compare the raw command data
   const existingData = {
     name: existingCommand.name,
     description: existingCommand.description,
     name_localizations: existingCommand.name_localizations || undefined,
     description_localizations: existingCommand.description_localizations || undefined,
     contexts: existingCommand.contexts || undefined,
-    default_permission: existingCommand.default_permission || undefined,
-    permissionsRequired: existingCommand.permissionsRequired || undefined,
-    botPermissions: existingCommand.botPermissions || undefined,
-    dm_permission: existingCommand.dm_permission || undefined,
     integration_types: existingCommand.integration_types || undefined,
     nsfw: existingCommand.nsfw || undefined,
     arguments: existingCommand.arguments || [],
@@ -49,10 +43,6 @@ module.exports = (existingCommand, localCommand) => {
     name_localizations: localCommand.data.name_localizations || undefined,
     description_localizations: localCommand.data.description_localizations || undefined,
     contexts: localCommand.data.contexts || undefined,
-    default_permission: localCommand.data.default_permission || undefined,
-    permissionsRequired: localCommand.data.permissionsRequired || undefined,
-    botPermissions: localCommand.data.botPermissions || undefined,
-    dm_permission: localCommand.data.dm_permission || undefined,
     integration_types: localCommand.data.integration_types || undefined,
     nsfw: localCommand.data.nsfw || undefined,
     arguments: localCommand.data.arguments || [],
@@ -68,9 +58,4 @@ module.exports = (existingCommand, localCommand) => {
     })) || []
   };
 
-  // Debugging: Print differences between existing and local data
-  printDifferences(existingData, localData);
-
-  // Return if they are different
-  return JSON.stringify(existingData) !== JSON.stringify(localData);
 };

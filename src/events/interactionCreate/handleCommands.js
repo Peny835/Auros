@@ -1,5 +1,6 @@
 const { devs, testServer } = require('../../../config.json');
 const getLocalCommands = require('../../utils/getLocalCommands');
+const { PermissionFlagsBits, PermissionsBitField } = require('discord.js');
 
 module.exports = async (client, interaction) => {
   if (!interaction.isChatInputCommand()) return;
@@ -12,53 +13,21 @@ module.exports = async (client, interaction) => {
     );
 
     if (!commandObject) return;
-
-    if (commandObject.data.devOnly) {
-      if (!devs.includes(interaction.member.id)) {
-        interaction.reply({
-          content: 'Nie możesz tego użyć. (DevOnly)',
-          ephemeral: true,
+    if (commandObject.data.default_member_permissions) {
+      const permissionNumber = commandObject.data.default_member_permissions;
+      const permissions = new PermissionsBitField(permissionNumber);
+      const readablePermissions = permissions.toArray().map(permission => {
+      return permission.charAt(0).toUpperCase() + permission.slice(1).toLowerCase().replace(/_/g, ' ');
+      });
+      const member = await interaction.guild.members.fetch(interaction.user.id);
+      if (!member.permissions.has(commandObject.data.default_member_permissions)) {
+        return await interaction.reply({
+          content: `Nie posiadasz wystarczających permisji do użycia tej komendy! (${readablePermissions})`,
+          ephemeral: true
         });
-        return;
       }
     }
-
-    if (commandObject.data.testOnly) {
-      if (!(interaction.guild.id === testServer)) {
-        interaction.reply({
-          content: 'Nie możesz użyć tego tutaj. (TestServerOnly)',
-          ephemeral: true,
-        });
-        return;
-      }
-    }
-
-    if (commandObject.permissionsRequired?.length) {
-      for (const permission of commandObject.permissionsRequired) {
-        if (!interaction.member.permissions.has(permission)) {
-          interaction.reply({
-            content: 'Nie posiadasz wystarczających uprawnień.',
-            ephemeral: true,
-          });
-          return;
-        }
-      }
-    }
-
-    if (commandObject.botPermissions?.length) {
-      for (const permission of commandObject.botPermissions) {
-        const bot = interaction.guild.members.me;
-
-        if (!bot.permissions.has(permission)) {
-          interaction.reply({
-            content: "Bot nie posiada wystarczających uprawnień.",
-            ephemeral: true,
-          });
-          return;
-        }
-      }
-    }
-    await commandObject.execute(interaction, client);
+    await commandObject.execute(interaction);
 
   } catch (error) {
     console.error(error);

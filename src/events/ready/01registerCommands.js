@@ -4,7 +4,7 @@ const areCommandsDifferent = require('../../utils/areCommandsDifferent');
 const getApplicationCommands = require('../../utils/getApplicationCommands');
 const getLocalCommands = require('../../utils/getLocalCommands');
 const { SlashCommandSubcommandBuilder, SlashCommandStringOption } = require('discord.js');
-const test = false;
+const test = true;
 
 module.exports = async (client) => {
     const applicationCommands = await getApplicationCommands(
