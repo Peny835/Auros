@@ -1,0 +1,26 @@
+{
+  "name": "auros",
+  "version": "1.0.0",
+  "description": "A silly Discord Bot",
+  "main": "app.js",
+  "scripts": {
+    "main": "node src/app.js",
+    "watch": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Peny835/Auros.git"
+  },
+  "author": "Jan Peny835 (peny835@gmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Peny835/Auros/issues"
+  },
+  "homepage": "https://github.com/Peny835/Auros#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5",
+    "util": "^0.12.5"
+  }
+}
