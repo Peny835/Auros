@@ -2,10 +2,10 @@
   "name": "auros",
   "version": "1.0.0",
   "description": "A silly Discord Bot",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "main": "node src/app.js",
-    "watch": "nodemon src/app.js"
+    "main": "node .",
+    "watch": "nodemon ."
   },
   "repository": {
     "type": "git",
