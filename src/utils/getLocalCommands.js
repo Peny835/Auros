@@ -1,7 +1,11 @@
 const path = require('path');
 const getAllFiles = require('./getAllFiles');
+const util = require('util');
+const replaceNull = require('./replaceNull');
+const assignCommandTypes = require('./assignCommandTypes');
 
-module.exports = (exceptions = []) => {
+
+module.exports = () => {
   let localCommands = [];
 
   const commandCategories = getAllFiles(
@@ -15,12 +19,11 @@ module.exports = (exceptions = []) => {
     for (const commandFile of commandFiles) {
       const commandObject = require(commandFile);
 
-      if (exceptions.includes(commandObject.data.name)) {
-        continue;
-      }
       localCommands.push(commandObject);
     }
   }
+  replaceNull(localCommands);
+  assignCommandTypes(localCommands);
 
   return localCommands;
 };
