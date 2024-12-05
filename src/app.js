@@ -1,6 +1,8 @@
 const { Client, GatewayIntentBits } = require('discord.js');
 const dotenv = require('dotenv');
 const eventHandler = require('./handlers/eventHandler');
+const lavalinkHandler = require('./handlers/lavalinkHandler');
+const dbHandler = require('./handlers/dbHandler');
 
 dotenv.config();
 
@@ -14,6 +16,10 @@ const client = new Client({
     ]
 });
 
+lavalinkHandler(client);
+
 eventHandler(client);
+
+dbHandler(client);
 
 client.login(process.env.TOKEN);

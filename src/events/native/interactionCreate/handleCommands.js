@@ -1,5 +1,5 @@
-const { devs, testServer } = require('../../../config.json');
-const getLocalCommands = require('../../utils/getLocalCommands');
+const { devs, testServer } = require('../../../../config.json');
+const getLocalCommands = require('../../../utils/getLocalCommands');
 const { PermissionFlagsBits, PermissionsBitField } = require('discord.js');
 
 module.exports = async (client, interaction) => {

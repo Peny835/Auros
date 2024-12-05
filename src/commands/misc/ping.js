@@ -1,11 +1,10 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, ActionRow, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('ping') //detects
         .setDescription('A coletes pngs cssmmand example with option') //detects
         .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers) //doesnt need to be detected
-        .setNSFW(true) 
         .addSubcommandGroup(group =>
             group
                 .setName('settissngs') 
@@ -103,7 +102,18 @@ module.exports = {
         const role = interaction.options.getRole('role');
         const mention = interaction.options.getMentionable('mention');
         const file = interaction.options.getAttachment('file');
+        
+        const stopButton = new ButtonBuilder() 
+        .setCustomId('skip')
+        .setStyle(ButtonStyle.Secondary)
+        .setEmoji('1313581158042304532'),
+            execute = async (interaction) => {
+                console.log(interaction.customId)
+            }
 
+
+        const actionrow = new ActionRowBuilder()
+        .addComponents(stopButton)
         await interaction.reply({
             content: `Ping received!\n` +
                     `Message: ${message}\n` +
@@ -114,7 +124,8 @@ module.exports = {
                     `Role: ${role?.name ?? 'None'}\n` +
                     `Mention: ${mention?.toString() ?? 'None'}\n` +
                     `File: ${file?.name ?? 'None'}`,
-            ephemeral: isEphemeral
+            ephemeral: isEphemeral,
+            components: [actionrow]
         });
     }
 };

@@ -1,60 +1,93 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
-const ytdl = require('@distube/ytdl-core');
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const msToTime = require('../../utils/msToTime');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('play')
-        .setDescription('Plays a song from a YouTube URL')
+        .setDescription('Odtwarza muzykę.')
         .addStringOption(option =>
-            option.setName('url')
-                .setDescription('The YouTube URL of the song')
+            option.setName('choice')
+                .setDescription('Wybierz żródło wyszukiwania')
+                .setRequired(true)
+                .setChoices([
+                    { name: 'YouTube', value: 'ytsearch' },
+                    { name: 'YouTube Music', value: 'ytmsearch' },
+                    { name: 'Spotify', value: 'spsearch' },
+                    { name: 'SoundCloud', value: 'scsearch' },
+                ])
+
+        )
+        .addStringOption(option =>
+            option.setName('song')
+                .setDescription('Podaj piosenke którą chcesz puścić')
                 .setRequired(true)),
-    
+    botPermissions: [PermissionFlagsBits.Connect, PermissionFlagsBits.Speak],
     async execute(interaction) {
-        const url = interaction.options.getString('url');
-        const voiceChannel = interaction.member.voice.channel;
-
-        if (!voiceChannel) {
-            return interaction.reply({ content: 'You need to be in a voice channel to use this command!', ephemeral: true });
-        }
-
-        if (!ytdl.validateURL(url)) {
-            return interaction.reply({ content: 'Please provide a valid YouTube URL!', ephemeral: true });
-        }
-
         try {
-            const connection = joinVoiceChannel({
-                channelId: voiceChannel.id,
-                guildId: interaction.guild.id,
-                adapterCreator: interaction.guild.voiceAdapterCreator,
+            const song = interaction.options.getString('song');
+            const { channel } = interaction.member.voice;
+
+            if (!channel) {
+                return interaction.reply({ content: 'Musisz być na kanale głosowym, aby użyć tej komendy!', ephemeral: true });
+            }
+            
+            if (!channel.joinable) {
+                return interaction.reply({ content: 'Nie mogę dołączyć do tego kanału głosowego!', ephemeral: true });
+            }
+            
+            if (!channel.speakable) {
+                return interaction.reply({ content: 'Nie mogę mówić na tym kanale głosowym!', ephemeral: true });
+            }
+
+            await interaction.reply({ content: `🔍 Wyszukiwanie...` });
+
+            const player = interaction.client.lavalink.getPlayer(interaction.guildId) || await interaction.client.lavalink.createPlayer({
+                guildId: interaction.guild.id, 
+                voiceChannelId: interaction.member.voice.channelId, 
+                textChannelId: interaction.channel.id, 
+                selfDeaf: true, 
+                selfMute: false,
+                volume: 100,  
             });
 
-            const stream = ytdl(url, {
-                filter: 'audioonly',
-                quality: 'highestaudio',
-                highWaterMark: 1 << 25, // Buffer size
-            });
-            const resource = createAudioResource(stream);
+            const res = await player.search({ query: song, source: interaction.options.getString('choice')}, interaction.user);
 
-            const player = createAudioPlayer();
-            connection.subscribe(player);
-
-            player.play(resource);
-
-            player.on(AudioPlayerStatus.Playing, () => {
-                console.log('Audio player is now playing!');
-            });
-
-            player.on('error', error => {
-                console.error('Error:', error);
-            });
-
-            await interaction.reply({ content: `Now playing: ${url}` });
-
+            if (!res.tracks.length) {
+                return interaction.editReply({ content: 'Nie znaleziono żadnych wyników!' });
+            }
+            await player.connect()
+            if (res.loadType === "playlist") {
+                for (let track of res.tracks) {
+                    player.queue.add(track);
+                }
+                if (!player.playing && !player.paused) {
+                    player.play();
+                }
+                
+                const embed = new EmbedBuilder()
+                    .setColor("#09f633")
+                    .setTitle(`**${res.playlist.name}**`)
+                    .setDescription(`Dodano playliste do kolejki!`)
+                    .setURL(song)
+                    .addFields(
+                        { name: 'Piosenki:', value: res.tracks.length.toString(), inline: true },
+                        { name: 'Długość:', value: msToTime(res.playlist.duration), inline: true }
+                    );
+                return interaction.editReply({content: '', embeds: [embed] });
+            } else {
+                player.queue.add(res.tracks[0]);
+                if (!player.playing && !player.paused) {
+                    player.play();
+                }
+                const embed = new EmbedBuilder()
+                    .setColor('#09f633')
+                    .setTitle(`${res.tracks[0].info.title}`)
+                    .setURL(res.tracks[0].info.uri)
+                    .setDescription(`Dodano do kolejki!`)
+                return interaction.editReply({content: '', embeds: [embed] });
+            }
         } catch (error) {
             console.error(error);
-            return interaction.reply({ content: 'There was an error trying to play the song!', ephemeral: true });
-        }
-    },
-};
+            await interaction.reply({conent: 'Wystąpił błąd!', ephemeral: true});}
+    }
+}

@@ -1,10 +1,10 @@
 const util = require('util');
 const axios = require('axios');
 const chalk = require('chalk');
-const { testServer } = require('../../../config.json');
-const getApplicationCommands = require('../../utils/getApplicationCommands');
-const getLocalCommands = require('../../utils/getLocalCommands');
-const areCommandsDifferent = require('../../utils/areCommandsDifferent');
+const { testServer } = require('../../../../config.json');
+const getApplicationCommands = require('../../../utils/getApplicationCommands');
+const getLocalCommands = require('../../../utils/getLocalCommands');
+const areCommandsDifferent = require('../../../utils/areCommandsDifferent');
 
 module.exports = async (client) => {
     const localCommands = getLocalCommands(client);
