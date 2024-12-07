@@ -6,15 +6,20 @@ dotenv.config();
 
 module.exports = (client) => {
   const clientId = process.env.CLIENT_ID;
-  const node = {
-    'authorization': process.env.NODE_AUTHORIZATION,
-    'host': process.env.NODE_HOST,
-    'port': process.env.NODE_PORT,
-    'id': process.env.NODE_ID,
-  }
+  const auth = process.env.NODE_AUTHORIZATION;
+  const host = process.env.NODE_HOST;
+  const port = parseInt(process.env.NODE_PORT);
+  const id = process.env.NODE_ID;
 
   client.lavalink = new LavalinkManager({
-    nodes: [node],
+    nodes: [
+      {
+          authorization: auth,
+          host: host,
+          port: port,
+          id: id,
+      }
+  ],
     sendToShard: (guildId, payload) =>
         client.guilds.cache.get(guildId)?.shard?.send(payload),
     client: {
