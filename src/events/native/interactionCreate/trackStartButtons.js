@@ -3,7 +3,6 @@ const currentSong = require("../../../embed/currentSong");
 const previousSong = require("../../../functions/trackStart/previousSong");
 const { queue, deleteMessage } = require("../../../functions/trackStart/queue");
 const { pause, play } = require("../../../functions/trackStart/trackManage");
-const util = require('util');
 
 
 function numberCheck(number) {

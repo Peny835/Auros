@@ -1,5 +1,4 @@
 const axios = require('axios');
-const util = require('util');
 
 module.exports = async (client, guildId) => {
   const applicationId = client.user.id; 

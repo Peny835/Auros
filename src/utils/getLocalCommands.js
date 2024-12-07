@@ -1,6 +1,5 @@
 const path = require('path');
 const getAllFiles = require('./getAllFiles');
-const util = require('util');
 const replaceNull = require('./replaceNull');
 const assignCommandTypes = require('./assignCommandTypes');
 

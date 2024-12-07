@@ -1,8 +1,11 @@
-const { devs, testServer } = require('../../../../config.json');
 const getLocalCommands = require('../../../utils/getLocalCommands');
 const { PermissionFlagsBits, PermissionsBitField } = require('discord.js');
+const dotenv = require('dotenv');
+dotenv.config();
 
 module.exports = async (client, interaction) => {
+  const devs = process.env.DEVS.split(',');
+  const testServer = process.env.TEST_SERVER;
   if (!interaction.isChatInputCommand()) return;
 
   const localCommands = getLocalCommands();

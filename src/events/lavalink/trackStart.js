@@ -1,5 +1,3 @@
-const util = require('util');
-const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, InteractionCollector } = require('discord.js');
 const currentSong = require("../../embed/currentSong");
 
 module.exports = async (client, player, track) => {

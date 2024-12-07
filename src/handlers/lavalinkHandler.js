@@ -1,9 +1,17 @@
 const { LavalinkManager } = require('lavalink-client');
 const getAllFiles = require('../utils/getAllFiles');
 const path = require('path');
-const { node, clientId } = require('../../config.json');
+const dotenv = require('dotenv');
+dotenv.config();
 
 module.exports = (client) => {
+  const clientId = process.env.CLIENT_ID;
+  const node = {
+    'authorization': process.env.NODE_AUTHORIZATION,
+    'host': process.env.NODE_HOST,
+    'port': process.env.NODE_PORT,
+    'id': process.env.NODE_ID,
+  }
 
   client.lavalink = new LavalinkManager({
     nodes: [node],

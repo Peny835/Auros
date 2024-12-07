@@ -1,12 +1,13 @@
-const util = require('util');
 const axios = require('axios');
 const chalk = require('chalk');
-const { testServer } = require('../../../../config.json');
+const dotenv = require('dotenv');
 const getApplicationCommands = require('../../../utils/getApplicationCommands');
 const getLocalCommands = require('../../../utils/getLocalCommands');
 const areCommandsDifferent = require('../../../utils/areCommandsDifferent');
+dotenv.config();
 
 module.exports = async (client) => {
+    const testServer = process.env.TEST_SERVER;
     const localCommands = getLocalCommands(client);
     const applicationCommands = await getApplicationCommands(client, testServer);
 
