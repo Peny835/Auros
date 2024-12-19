@@ -1,4 +1,4 @@
-const currentSong = require("../../embed/currentSong");
+const currentSong = require("../../assets/embeds/currentSong");
 
 module.exports = async (client, player, track) => {
 

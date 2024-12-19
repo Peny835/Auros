@@ -1,5 +1,5 @@
 const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
-const currentSong = require("../../../embed/currentSong");
+const currentSong = require("../../assets/embeds/currentSong");
 const previousSong = require("../../../functions/trackStart/previousSong");
 const { queue, deleteMessage } = require("../../../functions/trackStart/queue");
 const { pause, play } = require("../../../functions/trackStart/trackManage");

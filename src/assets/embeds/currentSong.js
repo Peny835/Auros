@@ -1,5 +1,5 @@
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder} = require('discord.js');
-const msToTime = require('../utils/msToTime');
+const msToTime = require('../../utils/msToTime');
 
 function currentSong(player, track) {
 const searchPlatform = track.info.sourceName;

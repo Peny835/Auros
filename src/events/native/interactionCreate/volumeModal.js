@@ -1,5 +1,5 @@
 const { deleteMessage } = require("../../../functions/trackStart/queue");
-const currentSong = require("../../../embed/currentSong");
+const currentSong = require("../../assets/embeds/currentSong");
 
 function numberCheck(number) {
     return number >= 1 && number <= 250;

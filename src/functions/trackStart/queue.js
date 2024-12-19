@@ -1,5 +1,5 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
-const currentSong = require('../../embed/currentSong');
+const currentSong = require('../../assets/embeds/currentSong');
 
 async function deleteMessage(client, interaction, player) {
     const channel = await client.channels.fetch(player.options.textChannelId);

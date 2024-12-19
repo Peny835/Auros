@@ -1,5 +1,5 @@
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
-const currentSong = require('../../embed/currentSong');
+const currentSong = require('../../assets/embeds/currentSong');
 const { deleteMessage } = require('../../functions/trackStart/queue');
 
 async function pause(client, player, interaction) {
